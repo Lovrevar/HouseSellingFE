@@ -1,0 +1,131 @@
+﻿@page "/"
+@using BlazorWASM.Services.ClientInterfaces
+@inject NavigationManager navMgr
+@inject IAuthService authService
+<PageTitle>Index</PageTitle>
+
+<div class="container-fluid">
+  <div class="row text-white" style="background-color: #EE893A;">
+    <div class="row">&nbsp</div>
+    <h2 style="text-align:center"> Search among 19,535 properties</h2>
+    <div class="row">&nbsp</div>
+    
+    <div class="input-group">
+      <div class="input-group">
+        <input @bind="cityFilter "type="search" list="cities"class="form-control rounded" placeholder="Where would you like to live" aria-label="Search" aria-describedby="search-addon" />
+        <datalist  id="cities">
+                                        <option value="Horsens">Horsens</option>
+                                        <option value="Aarhus">Aarhus</option>
+                                        <option value="København">København</option>
+                                        <option value="Aalborg">Aalborg</option>
+                                    </datalist>
+        <button type="button"  style="background-color:#332A8A; color:#FFFFFF" class="btn btn-outline-primary" @onclick="()=>searchListings(null)">Search</button>
+      </div>
+    </div>
+    <div class="row">&nbsp</div><div class="row">&nbsp</div><div class="row">&nbsp</div><div class="row">&nbsp</div>
+  </div>
+ 
+  <AuthorizeView>
+    <Authorized>
+  <div class="row text-white" style="background-color: #332A8A">
+    <div class="row">&nbsp</div>
+    <p style="text-align:center"> Find a buyer in no time <button class="btn bg-warning" @onclick="AddListing">Create listing</button></p>
+  </div>
+  <div class="row">&nbsp</div><div class="row">&nbsp</div>
+    </Authorized><NotAuthorized>
+  <div class="row text-white" style="background-color: #332A8A">
+      <div class="row">&nbsp</div>
+      <p style="text-align:center"> Find a buyer in no time <button class="btn bg-warning" @onclick="Login">Login</button></p>
+    </div>
+  <div class="row">&nbsp</div><div class="row">&nbsp</div>
+  </NotAuthorized>
+  </AuthorizeView>
+  <div class="row"> 
+    <h3 style="text-align:center"> Listing categories </h3>
+    
+    <div class="col-sm"></div>
+    <div class="col-sm">
+      <p class="text-center">For sale</p>
+            <div class="col-md text-center"> 
+              <button type="button" style="width: 100px;" class="btn btn-primary">House</button>
+              <button type="button" style="width: 100px;" class="btn btn-primary">Apartment</button>
+            </div>
+    </div>
+    <div class="col-sm"></div>
+    <div class="col-sm">
+      <p class="text-center">For rent</p>
+      <div class="col-md text-center"> 
+        <button type="button" style="width: 100px;" class="btn btn-primary">House</button>
+        <button type="button" style="width: 100px;" class="btn btn-primary">Apartment</button>
+      </div>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+  
+  
+  <div class="row">&nbsp</div><div class="row">&nbsp</div>
+  
+  <div class="row">
+    <h3>Top 3 popular cities in Denmark</h3>
+    <div class="col-md-4">
+      <div class="img-rounded" @onclick='()=>searchListings("København")'>
+        <img src="https://imageio.forbes.com/specials-images/dam/imageserve/1128749011/960x0.jpg?format=jpg&width=960" alt="Lights" style=" width: 350px;height: 180px; object-fit: cover;">
+          <div class="caption">
+            <p style="text-align: center" >København</p>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="img-rounded" @onclick='()=>searchListings("Aarhus")'>
+        <img src="https://a.cdn-hotels.com/gdcs/production62/d681/3709d4b0-db83-11e8-8252-0242ac110006.jpg" alt="Nature" style=" width: 350px;height: 180px; object-fit: cover;">
+                                                                                                                                     
+          <div class="caption">
+            <p style="text-align: center">Aarhus</p>
+          </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="img-rounded" @onclick='()=>searchListings("Horsens")'>
+        <img src="https://files.guidedanmark.org/files/472/284935_udsigt-campus-horsens.png" alt="Fjords" style=" width: 350px;height: 180px; object-fit: cover;">
+          <div class="caption">
+            <p style="text-align: center">Horsens</p>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  public string cityFilter;
+    private void AddListing()
+    {
+      navMgr.NavigateTo("/AddListing");
+    }
+
+  private void Login()
+  {
+    navMgr.NavigateTo("/Login");
+  }
+
+  private void searchListings(string? city)
+  {
+    if (city != null) {
+    navMgr.NavigateTo("/ViewListings/?city="+city);}
+    else if (cityFilter!= null)
+    {
+      navMgr.NavigateTo("/ViewListings/?city="+cityFilter);
+    }
+    else
+    {
+      navMgr.NavigateTo("/ViewListings");
+    }
+  }
+}
+
+
+
+
+
+  
+
+

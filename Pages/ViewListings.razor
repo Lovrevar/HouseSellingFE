@@ -1,0 +1,123 @@
+﻿@page "/ViewListings/"
+@using Model.Model
+@using BlazorWASM.Services.ClientInterfaces
+@using Microsoft.AspNetCore.WebUtilities
+@inject IListingService listingService;
+@inject NavigationManager navMgr
+<header class="py-5" style="background-color: #EE893A;">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">All house listings</h1>
+            <p class="lead fw-normal text-white-50 mb-0"></p>
+        </div>
+    
+        <div>
+            <div class="filter-bar">
+                <div class="filters-container">
+                    <img src="icons/@(doShowFilters ? "clear_" : "")funnel.png" class="funnel" @onclick="@(() => doShowFilters = !doShowFilters)" alt="Funnel"/>
+                    @if (doShowFilters)
+                    {
+                        <div class="filter">
+                            <label>Max price:</label>
+                            <input type="number" @bind="maxPriceFilter"/>
+                        </div>
+                        <div class="filter">
+                            <label>Minimum area:</label>
+                            <input type="number" @bind="minAreaFilter"/>
+                        </div>
+                        <div class="filter">
+                            <label>City:</label>
+                            <input @bind="cityFilter" type="text" list="cities" />
+                            <datalist  id="cities">
+                                <option value="Horsens">Horsens</option>
+                                <option value="Aarhus">Aarhus</option>
+                                <option value="København">København</option>
+                                <option value="Aalborg">Aalborg</option>
+                            </datalist>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <button style="width: 100px; background-color:#0a53be;color:#FFFFFF;"  class="btn btn-outline-primary" @onclick="LoadListings">Search</button>
+        </div>
+        </div>
+      </header>
+@if (listings == null)
+{
+}
+else if (!listings.Any())
+{
+    <p>No listings that match your criteria</p>
+}
+else
+{
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+
+                @foreach (ShortHouseListing shortHouseListing in listings)
+                {
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="data:@shortHouseListing.image.contentType;base64,@shortHouseListing.image.base64data" alt="..."/>
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <h5 class="fw-bolder">@shortHouseListing.address.ToString()</h5>
+                                    @shortHouseListing.price dkk
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <button class="btn btn-outline-dark mt-auto" @onclick="@(() => navMgr.NavigateTo($"/ViewListing/{@shortHouseListing.id}"))">View Listing</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+
+
+@code {
+    private int maxPriceFilter;
+    private int minAreaFilter;
+    private string cityFilter;
+    private bool doShowFilters = false;
+    
+    
+    private IEnumerable<ShortHouseListing>? listings;
+
+    protected override async Task OnInitializedAsync()
+    {
+    
+        var uri = navMgr.ToAbsoluteUri(navMgr.Uri);
+
+        if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("maxPrice", out var maxPrice))
+        {
+             maxPriceFilter = Int32.Parse(maxPrice.First()); 
+        }
+
+        if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("minArea", out var minArea))
+        {
+            minAreaFilter = Int32.Parse(minArea.First()); 
+        }
+        if(QueryHelpers.ParseQuery(uri.Query).TryGetValue("city", out var city))
+        {
+            cityFilter = city.First();
+        }
+
+        listings = await listingService.getAsync(maxPriceFilter,minAreaFilter,cityFilter);
+    }
+
+    private async Task LoadListings()
+    {
+        listings = await listingService.getAsync(maxPriceFilter,minAreaFilter,cityFilter);
+    }
+
+}
+}

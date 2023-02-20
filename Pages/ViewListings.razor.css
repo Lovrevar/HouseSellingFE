@@ -1,0 +1,23 @@
+﻿.filter-bar {
+    border-radius: 10px;
+    padding: 5px;
+    display: inline-flex;
+    margin: 10px;
+    background-color: #0a53be;
+    color: #FFFFFF;
+}
+
+.funnel{
+    width:30px;
+    height:30px;
+    cursor: pointer;
+}
+
+.filter {
+    display: inline-flex;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    
+}

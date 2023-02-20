@@ -1,0 +1,199 @@
+﻿@page "/ViewListing/{id:long}"
+@using Model.Model
+@using BlazorWASM.Services.Http
+@using BlazorWASM.Services.ClientInterfaces
+@inject IListingService listingService;
+
+<div class="container listingcontainer">
+    <div class="row ">
+        @foreach (ImageFile image in images)
+        {
+            <div class="col listingphotos">
+                <img class=" w-100" src="data:@image.contentType;base64,@image.base64data" alt="house">
+            </div>
+        }
+  
+    </div>
+</div>
+
+
+<div class="row">&nbsp</div>
+<div class="row">
+
+    <strong>House listing information</strong><br>
+    <div class="row">&nbsp</div>
+    <div class="table-responsive">
+        <table class="table table-user-information">
+            <tbody>
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Address
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @address.street @address.houseno, @address.postnumber @address.city
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Year of construction
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @ConstructionYear.
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Last rebuilt
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @LastRebuilt
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Inspected
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @HasInspection.
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Ground Area
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @GroundArea m
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Floor Area
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @FloorArea m
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Price
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @price dkk
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Description
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @description 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>
+                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                        Sellers email
+                    </strong>
+                </td>
+                <td class="text-primary">
+                    @email 
+                </td>
+            </tr>
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="map-container-google-2" class="z-depth-1-half map-container" style="height: 500px">
+    <iframe src="https://maps.google.com/maps?q=55.85893350816744, 9.84243022736794&z=15&output=embed" width="360" height="270" frameborder="0" style="border:0"></iframe>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+    [Parameter]
+    public long id { get; set; }
+
+    private string msg = "";
+
+    private Address address;
+    private int ConstructionYear;
+    private int LastRebuilt;
+    private bool HasInspection;
+    private double GroundArea;
+    private double FloorArea;
+    private List<ImageFile> images;
+    private string email;    
+    private long price;
+    private string description;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        msg = "";
+        try
+        {
+            HouseListing listing = await listingService.GetById(id);
+            address = listing.address;
+            ConstructionYear = listing.ConstructionYear;
+            LastRebuilt = listing.LastRebuilt;
+            HasInspection = listing.HasInspection;
+            GroundArea = listing.GroundArea;
+            FloorArea = listing.FloorArea;
+            images = listing.images;
+            price = (long)listing.price;
+            description = listing.description;
+            email = listing.userEmail;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            msg = e.Message;
+        }
+    }
+
+}
+
+}
+
+}

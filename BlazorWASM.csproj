@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Model\Model.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Pages\UIComponents" />
+      <Folder Include="wwwroot\icons" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Cities\Aalborg.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Cities\Aarhus.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Cities\Copenhagen.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Cities\Horsens.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Cities\Kolding.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Filters\ApartmentsForRent.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Filters\ApartmentsForSale.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Filters\HousesForRent.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Filters\HousesForSale.razor" />
+    </ItemGroup>
+
+</Project>
